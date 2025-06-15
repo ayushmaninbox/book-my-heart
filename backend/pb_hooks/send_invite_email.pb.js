@@ -145,39 +145,23 @@ routerAdd("POST", "/api/send-invite-email", (c) => {
     `
     
     try {
-        // Get Resend API key from environment
-        const resendApiKey = $os.getenv("RESEND_API_KEY")
-        
-        if (!resendApiKey) {
-            console.log("RESEND_API_KEY not found, skipping email send")
-            return c.json(200, {"success": true, "message": "Email sending skipped - no API key"})
-        }
-        
-        // Prepare email data
-        const emailData = {
-            from: 'BookMyHeart <noreply@bookmyheart.app>',
-            to: [data.partnerEmail],
+        // Use PocketBase's built-in mail system
+        const message = new MailerMessage({
+            from: {
+                address: "noreply@bookmyheart.com", // Change this to your actual domain
+                name: "BookMyHeart"
+            },
+            to: [{
+                address: data.partnerEmail,
+                name: data.partnerName || ""
+            }],
             subject: `💖 ${data.senderName || 'Someone special'} invited you to a ${data.dateType}!`,
             html: emailHtml
-        }
-        
-        // Send email using Resend API
-        const response = $http.send({
-            url: "https://api.resend.com/emails",
-            method: "POST",
-            headers: {
-                "Authorization": "Bearer " + resendApiKey,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(emailData)
         })
         
-        if (response.statusCode >= 200 && response.statusCode < 300) {
-            return c.json(200, {"success": true, "message": "Email sent successfully"})
-        } else {
-            console.error("Email sending failed:", response.raw)
-            return c.json(500, {"success": false, "error": "Failed to send email"})
-        }
+        $app.newMailClient().send(message)
+        
+        return c.json(200, {"success": true, "message": "Email sent successfully"})
         
     } catch (error) {
         console.error("Email sending error:", error)
