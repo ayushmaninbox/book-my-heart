@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Nunito', system-ui, sans-serif;
+    background: linear-gradient(135deg, #fdf2f8 0%, #faf5ff 100%);
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl;
+  }
+  
+  .btn-secondary {
+    @apply bg-white hover:bg-pink-50 text-pink-600 font-semibold py-3 px-8 rounded-full border-2 border-pink-200 hover:border-pink-300 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg;
+  }
+  
+  .card {
+    @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-pink-100;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border-2 border-pink-100 focus:border-pink-300 focus:outline-none transition-colors duration-200 bg-white;
+  }
+  
+  .floating-hearts {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  
+  .heart {
+    position: absolute;
+    color: #f9a8d4;
+    font-size: 1.5rem;
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+  .heart:nth-child(2) { left: 20%; animation-delay: 1s; }
+  .heart:nth-child(3) { left: 35%; animation-delay: 2s; }
+  .heart:nth-child(4) { left: 50%; animation-delay: 3s; }
+  .heart:nth-child(5) { left: 65%; animation-delay: 4s; }
+  .heart:nth-child(6) { left: 80%; animation-delay: 5s; }
+  .heart:nth-child(7) { left: 90%; animation-delay: 6s; }
+}
