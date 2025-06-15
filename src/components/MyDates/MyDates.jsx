@@ -14,52 +14,33 @@ const MyDates = () => {
       try {
         const userId = getUserId();
         
-        // Try to load from PocketBase first
-        let pocketBaseDates = [];
+        // FORCE CLEAR localStorage to prevent any persistence
+        localStorage.removeItem('bookmyheart_dates');
+        localStorage.removeItem('bookmyheart_localStorage_cleared');
+        console.log('Force cleared all localStorage data');
+        
+        // Only load from PocketBase - no localStorage fallback
+        let finalDates = [];
+        
         try {
-          pocketBaseDates = await getUserDates(userId);
+          finalDates = await getUserDates(userId);
+          console.log('Loaded from PocketBase only:', finalDates.length, 'dates');
         } catch (error) {
-          console.warn('PocketBase unavailable, using localStorage only:', error);
+          console.warn('PocketBase unavailable:', error);
+          // Don't use localStorage as fallback anymore
+          finalDates = [];
         }
         
-        // Load from localStorage as backup
-        const localDates = JSON.parse(localStorage.getItem('bookmyheart_dates') || '[]');
-        const userLocalDates = localDates.filter(date => date.userId === userId);
+        // Remove any duplicates based on ID (just in case)
+        const uniqueDates = finalDates.filter((date, index, self) => 
+          index === self.findIndex(d => d.id === date.id)
+        );
         
-        // Create a map to avoid duplicates based on customId or id
-        const dateMap = new Map();
-        
-        // Add PocketBase dates first (they take priority)
-        pocketBaseDates.forEach(date => {
-          const key = date.customId || date.id;
-          dateMap.set(key, {
-            ...date,
-            id: date.customId || date.id, // Use customId as the main ID if available
-            source: 'pocketbase'
-          });
-        });
-        
-        // Add localStorage dates only if they don't already exist
-        userLocalDates.forEach(date => {
-          const key = date.id;
-          if (!dateMap.has(key)) {
-            dateMap.set(key, {
-              ...date,
-              source: 'localStorage'
-            });
-          }
-        });
-        
-        // Convert map back to array
-        const uniqueDates = Array.from(dateMap.values());
+        console.log('Final unique dates:', uniqueDates.length);
         setDates(uniqueDates);
       } catch (error) {
         console.error('Error loading dates:', error);
-        // Fallback to localStorage only
-        const userId = getUserId();
-        const localDates = JSON.parse(localStorage.getItem('bookmyheart_dates') || '[]');
-        const userDates = localDates.filter(date => date.userId === userId);
-        setDates(userDates);
+        setDates([]);
       } finally {
         setLoading(false);
       }
@@ -154,6 +135,13 @@ const MyDates = () => {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Debug Info */}
+        <div className="mb-4 text-center">
+          <p className="text-sm text-gray-500">
+            Showing {filteredDates.length} {filter} dates (Total: {dates.length}) - PocketBase Only
+          </p>
         </div>
 
         {/* Dates Grid */}

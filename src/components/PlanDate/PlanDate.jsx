@@ -51,13 +51,9 @@ const PlanDate = () => {
         createdAt: new Date().toISOString()
       };
 
-      // Save to PocketBase
+      // Save to PocketBase ONLY - no localStorage backup
       await createDate(dateData);
-
-      // Also save to localStorage as backup
-      const existingDates = JSON.parse(localStorage.getItem('bookmyheart_dates') || '[]');
-      existingDates.push(dateData);
-      localStorage.setItem('bookmyheart_dates', JSON.stringify(existingDates));
+      console.log('Date created in PocketBase only');
 
       // Send email invite if email is provided
       if (data.partnerEmail) {
