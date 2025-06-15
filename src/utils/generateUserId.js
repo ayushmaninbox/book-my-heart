@@ -2,7 +2,7 @@ export const generateUserId = () => {
   let userId = localStorage.getItem('bookmyheart_userId');
   
   if (!userId) {
-    userId = 'user_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+    userId = 'u_' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem('bookmyheart_userId', userId);
   }
   
@@ -11,4 +11,9 @@ export const generateUserId = () => {
 
 export const getUserId = () => {
   return localStorage.getItem('bookmyheart_userId') || generateUserId();
+};
+
+// Generate a short ID compatible with PocketBase (15 characters max)
+export const generateShortId = () => {
+  return Math.random().toString(36).substr(2, 15);
 };

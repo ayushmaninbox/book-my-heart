@@ -10,8 +10,17 @@ export default pb;
 // Helper functions for date operations
 export const createDate = async (dateData) => {
   try {
-    const record = await pb.collection('dates').create(dateData);
-    return record;
+    // Remove the id field and let PocketBase auto-generate it
+    const { id, ...dataWithoutId } = dateData;
+    
+    // Add the custom id as a separate field if needed
+    const recordData = {
+      ...dataWithoutId,
+      customId: id, // Store our custom ID as a separate field
+    };
+    
+    const record = await pb.collection('dates').create(recordData);
+    return { ...record, id: record.customId || record.id }; // Return with our custom ID
   } catch (error) {
     console.error('Error creating date:', error);
     throw error;
@@ -20,8 +29,23 @@ export const createDate = async (dateData) => {
 
 export const getDateById = async (id) => {
   try {
-    const record = await pb.collection('dates').getOne(id);
-    return record;
+    // First try to find by customId
+    const records = await pb.collection('dates').getFullList({
+      filter: `customId = "${id}"`,
+    });
+    
+    if (records.length > 0) {
+      const record = records[0];
+      return { ...record, id: record.customId || record.id };
+    }
+    
+    // Fallback to PocketBase ID
+    try {
+      const record = await pb.collection('dates').getOne(id);
+      return record;
+    } catch {
+      return null;
+    }
   } catch (error) {
     console.error('Error fetching date:', error);
     return null;
@@ -34,7 +58,12 @@ export const getUserDates = async (userId) => {
       filter: `userId = "${userId}"`,
       sort: '-created',
     });
-    return records;
+    
+    // Map records to use customId as id if available
+    return records.map(record => ({
+      ...record,
+      id: record.customId || record.id
+    }));
   } catch (error) {
     console.error('Error fetching user dates:', error);
     return [];
@@ -56,7 +85,7 @@ export const sendDateInvite = async (dateId, partnerEmail, partnerName, dateData
       senderName: dateData.senderName || 'Someone special'
     };
 
-    // Create invite record
+    // Create invite record (let PocketBase auto-generate ID)
     const record = await pb.collection('invites').create(inviteData);
     
     // Send email notification through PocketBase function

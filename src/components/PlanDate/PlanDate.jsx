@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { v4 as uuidv4 } from 'uuid';
-import { getUserId } from '../../utils/generateUserId';
+import { getUserId, generateShortId } from '../../utils/generateUserId';
 import { generateMeetingLink } from '../../utils/formatCountdown';
 import { createDate, sendDateInvite } from '../../lib/pocketbase';
 
@@ -39,7 +38,7 @@ const PlanDate = () => {
     setIsSubmitting(true);
     
     try {
-      const dateId = uuidv4();
+      const dateId = generateShortId();
       const userId = getUserId();
       const dateTime = new Date(`${data.date}T${data.time}`);
       
