@@ -10,17 +10,8 @@ export default pb;
 // Helper functions for date operations
 export const createDate = async (dateData) => {
   try {
-    // Remove the id field and let PocketBase auto-generate it
-    const { id, ...dataWithoutId } = dateData;
-    
-    // Add the custom id as a separate field if needed
-    const recordData = {
-      ...dataWithoutId,
-      customId: id, // Store our custom ID as a separate field
-    };
-    
-    const record = await pb.collection('dates').create(recordData);
-    return { ...record, id: record.customId || record.id }; // Return with our custom ID
+    const record = await pb.collection('dates').create(dateData);
+    return record;
   } catch (error) {
     console.error('Error creating date:', error);
     throw error;
@@ -35,8 +26,7 @@ export const getDateById = async (id) => {
     });
     
     if (records.length > 0) {
-      const record = records[0];
-      return { ...record, id: record.customId || record.id };
+      return records[0];
     }
     
     // Fallback to PocketBase ID
@@ -59,11 +49,7 @@ export const getUserDates = async (userId) => {
       sort: '-created',
     });
     
-    // Map records to use customId as id if available
-    return records.map(record => ({
-      ...record,
-      id: record.customId || record.id
-    }));
+    return records;
   } catch (error) {
     console.error('Error fetching user dates:', error);
     return [];
@@ -82,21 +68,27 @@ export const sendDateInvite = async (dateId, partnerEmail, partnerName, dateData
       meetingLink: dateData.meetingLink,
       spotifyPlaylist: dateData.spotifyPlaylist || '',
       inviteUrl: `${import.meta.env.VITE_APP_URL || window.location.origin}/invite/${dateId}`,
-      senderName: dateData.senderName || 'Someone special'
+      senderName: dateData.senderName || 'Someone special',
+      emailSent: false
     };
 
-    // Create invite record (let PocketBase auto-generate ID)
+    // Create invite record
     const record = await pb.collection('invites').create(inviteData);
     
     // Send email notification through PocketBase function
     try {
-      await pb.send('/api/send-invite-email', {
+      const emailResponse = await pb.send('/api/send-invite-email', {
         method: 'POST',
         body: JSON.stringify(inviteData),
         headers: {
           'Content-Type': 'application/json',
         },
       });
+
+      // Update invite record to mark email as sent
+      if (emailResponse.success) {
+        await pb.collection('invites').update(record.id, { emailSent: true });
+      }
     } catch (emailError) {
       console.warn('Email sending failed, but invite was created:', emailError);
     }
