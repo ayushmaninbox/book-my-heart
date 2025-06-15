@@ -183,7 +183,7 @@ const Home = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="feature-card">
+            <div className="feature-card group">
               <div className="feature-icon">🎮</div>
               <h3 className="text-2xl font-semibold text-gray-800 mb-4">Game Nights</h3>
               <p className="text-gray-600 leading-relaxed">
@@ -196,7 +196,7 @@ const Home = () => {
               </div>
             </div>
             
-            <div className="feature-card">
+            <div className="feature-card group">
               <div className="feature-icon">🎬</div>
               <h3 className="text-2xl font-semibold text-gray-800 mb-4">Movie Dates</h3>
               <p className="text-gray-600 leading-relaxed">
@@ -209,7 +209,7 @@ const Home = () => {
               </div>
             </div>
             
-            <div className="feature-card">
+            <div className="feature-card group">
               <div className="feature-icon">🍽️</div>
               <h3 className="text-2xl font-semibold text-gray-800 mb-4">Dinner Dates</h3>
               <p className="text-gray-600 leading-relaxed">

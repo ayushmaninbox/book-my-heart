@@ -136,7 +136,7 @@
   .love-particle:nth-child(5) { left: 70%; top: 40%; animation-delay: 2s; }
   
   .feature-card {
-    @apply card text-center group cursor-pointer transform transition-all duration-500 hover:scale-105;
+    @apply card text-center cursor-pointer transform transition-all duration-500 hover:scale-105;
   }
   
   .feature-card:hover {
