@@ -14,12 +14,10 @@ const MyDates = () => {
       try {
         const userId = getUserId();
         
-        // FORCE CLEAR localStorage to prevent any persistence
         localStorage.removeItem('bookmyheart_dates');
         localStorage.removeItem('bookmyheart_localStorage_cleared');
         console.log('Force cleared all localStorage data');
         
-        // Only load from PocketBase - no localStorage fallback
         let finalDates = [];
         
         try {
@@ -27,11 +25,9 @@ const MyDates = () => {
           console.log('Loaded from PocketBase only:', finalDates.length, 'dates');
         } catch (error) {
           console.warn('PocketBase unavailable:', error);
-          // Don't use localStorage as fallback anymore
           finalDates = [];
         }
         
-        // Remove any duplicates based on ID (just in case)
         const uniqueDates = finalDates.filter((date, index, self) => 
           index === self.findIndex(d => d.id === date.id)
         );
@@ -63,14 +59,14 @@ const MyDates = () => {
 
   const getDateTypeColor = (dateType) => {
     const colors = {
-      'Game Night': 'bg-blue-100 text-blue-600',
-      'Movie Night': 'bg-purple-100 text-purple-600',
-      'Dinner Date': 'bg-pink-100 text-pink-600',
-      'Coffee Chat': 'bg-amber-100 text-amber-600',
-      'Study Session': 'bg-green-100 text-green-600',
-      'Surprise Date': 'bg-red-100 text-red-600'
+      'Game Night': 'bg-blue-100 text-blue-600 border-blue-200',
+      'Movie Night': 'bg-purple-100 text-purple-600 border-purple-200',
+      'Dinner Date': 'bg-pink-100 text-pink-600 border-pink-200',
+      'Coffee Chat': 'bg-amber-100 text-amber-600 border-amber-200',
+      'Study Session': 'bg-green-100 text-green-600 border-green-200',
+      'Surprise Date': 'bg-red-100 text-red-600 border-red-200'
     };
-    return colors[dateType] || 'bg-pink-100 text-pink-600';
+    return colors[dateType] || 'bg-pink-100 text-pink-600 border-pink-200';
   };
 
   const filteredDates = dates.filter(date => {
@@ -85,115 +81,187 @@ const MyDates = () => {
   const copyInviteLink = (dateId) => {
     const inviteLink = `${window.location.origin}/invite/${dateId}`;
     navigator.clipboard.writeText(inviteLink);
-    // You could add a toast notification here
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-4xl mb-4">💖</div>
-          <p className="text-gray-600">Loading your dates...</p>
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div className="floating-elements">
+          <div className="floating-element">💖</div>
+          <div className="floating-element">✨</div>
+          <div className="floating-element">💕</div>
+        </div>
+        <div className="text-center relative z-10">
+          <div className="text-8xl mb-6 animate-pulse">💖</div>
+          <p className="text-xl text-gray-600 handwriting">Loading your love stories...</p>
+          <div className="mt-4 flex justify-center space-x-1">
+            <div className="w-3 h-3 bg-rose-400 rounded-full animate-bounce"></div>
+            <div className="w-3 h-3 bg-pink-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+            <div className="w-3 h-3 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen py-8 relative overflow-hidden">
+      {/* Floating Elements */}
+      <div className="floating-elements">
+        <div className="floating-element">💕</div>
+        <div className="floating-element">✨</div>
+        <div className="floating-element">💖</div>
+        <div className="floating-element">🌙</div>
+        <div className="floating-element">⭐</div>
+        <div className="floating-element">💫</div>
+        <div className="floating-element">🦋</div>
+        <div className="floating-element">🌸</div>
+      </div>
+
       {/* Header */}
-      <header className="flex justify-between items-center p-6 max-w-6xl mx-auto">
-        <Link to="/" className="flex items-center space-x-2">
-          <span className="text-2xl">💖</span>
-          <span className="text-xl font-bold text-gray-800">BookMyHeart</span>
+      <header className="relative z-10 flex justify-between items-center p-8 max-w-7xl mx-auto">
+        <Link to="/" className="flex items-center space-x-3">
+          <div className="w-12 h-12 bg-gradient-to-r from-rose-400 to-purple-400 rounded-full flex items-center justify-center shadow-lg">
+            <span className="text-2xl">💖</span>
+          </div>
+          <div>
+            <span className="text-2xl font-bold bg-gradient-to-r from-rose-600 to-purple-600 bg-clip-text text-transparent">
+              BookMyHeart
+            </span>
+            <p className="text-sm text-gray-500 handwriting">your love timeline</p>
+          </div>
         </Link>
         <Link to="/plan" className="btn-primary">
+          <span className="mr-2">💕</span>
           Plan New Date
         </Link>
       </header>
 
-      <div className="max-w-4xl mx-auto px-6">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">My Dates</h1>
-          <p className="text-gray-600">All your planned romantic moments</p>
+      <div className="relative z-10 max-w-6xl mx-auto px-8">
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold text-gray-800 mb-4 handwriting">My Love Stories</h1>
+          <p className="text-xl text-gray-600">All your magical moments, past and future ✨</p>
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex justify-center mb-8">
-          <div className="bg-white rounded-full p-1 shadow-lg">
-            {['all', 'upcoming', 'past'].map((filterType) => (
+        <div className="flex justify-center mb-12">
+          <div className="bg-white/80 backdrop-blur-sm rounded-full p-2 shadow-xl border border-white/50">
+            {[
+              { key: 'all', label: 'All Dates', icon: '💖' },
+              { key: 'upcoming', label: 'Upcoming', icon: '🚀' },
+              { key: 'past', label: 'Memories', icon: '📸' }
+            ].map((filterType) => (
               <button
-                key={filterType}
-                onClick={() => setFilter(filterType)}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-200 ${
-                  filter === filterType
-                    ? 'bg-pink-500 text-white shadow-md'
-                    : 'text-gray-600 hover:text-pink-500'
+                key={filterType.key}
+                onClick={() => setFilter(filterType.key)}
+                className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${
+                  filter === filterType.key
+                    ? 'bg-gradient-to-r from-rose-400 to-purple-400 text-white shadow-lg transform scale-105'
+                    : 'text-gray-600 hover:text-rose-500 hover:bg-white/50'
                 }`}
               >
-                {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
+                <span className="mr-2">{filterType.icon}</span>
+                {filterType.label}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Debug Info */}
-        <div className="mb-4 text-center">
-          <p className="text-sm text-gray-500">
-            Showing {filteredDates.length} {filter} dates (Total: {dates.length}) - PocketBase Only
-          </p>
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-6 mb-12">
+          <div className="card text-center bg-gradient-to-br from-rose-50 to-pink-50">
+            <div className="text-3xl font-bold bg-gradient-to-r from-rose-500 to-purple-500 bg-clip-text text-transparent">
+              {dates.length}
+            </div>
+            <div className="text-gray-600 handwriting">Total Dates</div>
+          </div>
+          <div className="card text-center bg-gradient-to-br from-blue-50 to-indigo-50">
+            <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+              {dates.filter(d => new Date(d.dateTime) > new Date()).length}
+            </div>
+            <div className="text-gray-600 handwriting">Upcoming</div>
+          </div>
+          <div className="card text-center bg-gradient-to-br from-green-50 to-teal-50">
+            <div className="text-3xl font-bold bg-gradient-to-r from-green-500 to-teal-500 bg-clip-text text-transparent">
+              {dates.filter(d => new Date(d.dateTime) <= new Date()).length}
+            </div>
+            <div className="text-gray-600 handwriting">Memories</div>
+          </div>
         </div>
 
         {/* Dates Grid */}
         {filteredDates.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">💔</div>
-            <h3 className="text-2xl font-semibold text-gray-800 mb-2">No dates found</h3>
-            <p className="text-gray-600 mb-6">
+          <div className="text-center py-16">
+            <div className="text-8xl mb-6">
+              {filter === 'all' ? '💔' : filter === 'upcoming' ? '🚀' : '📸'}
+            </div>
+            <h3 className="text-3xl font-semibold text-gray-800 mb-4 handwriting">
               {filter === 'all' 
-                ? "You haven't planned any dates yet" 
-                : `No ${filter} dates found`}
+                ? "No love stories yet" 
+                : filter === 'upcoming'
+                ? "No upcoming dates"
+                : "No memories yet"}
+            </h3>
+            <p className="text-gray-600 mb-8 text-lg">
+              {filter === 'all' 
+                ? "Your romantic journey is waiting to begin! ✨" 
+                : filter === 'upcoming'
+                ? "Time to plan your next magical moment 💕"
+                : "Create some beautiful memories to look back on 🌟"}
             </p>
-            <Link to="/plan" className="btn-primary">
+            <Link to="/plan" className="btn-primary text-xl px-12 py-4">
+              <span className="mr-3">💕</span>
               Plan Your First Date
+              <span className="ml-3">✨</span>
             </Link>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredDates.map((date) => {
               const countdown = formatCountdown(date.dateTime);
               const dateTime = new Date(date.dateTime);
+              const isUpcoming = dateTime > new Date();
               
               return (
-                <div key={date.id} className="card hover:scale-105 transition-transform duration-200">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full text-sm ${getDateTypeColor(date.dateType)}`}>
-                      <span>{getDateTypeIcon(date.dateType)}</span>
-                      <span className="font-medium">{date.dateType}</span>
+                <div key={date.id} className={`card hover:scale-105 transition-all duration-500 relative overflow-hidden ${
+                  isUpcoming ? 'bg-gradient-to-br from-white to-rose-50' : 'bg-gradient-to-br from-white to-gray-50'
+                }`}>
+                  {/* Status indicator */}
+                  <div className={`absolute top-4 right-4 w-3 h-3 rounded-full ${
+                    isUpcoming ? 'bg-green-400 animate-pulse' : 'bg-gray-300'
+                  }`}></div>
+
+                  <div className="flex items-center justify-between mb-6">
+                    <div className={`inline-flex items-center space-x-3 px-4 py-2 rounded-full border-2 ${getDateTypeColor(date.dateType)}`}>
+                      <span className="text-xl">{getDateTypeIcon(date.dateType)}</span>
+                      <span className="font-semibold text-sm">{date.dateType}</span>
                     </div>
                     <button
                       onClick={() => copyInviteLink(date.id)}
-                      className="text-gray-400 hover:text-pink-500 transition-colors"
+                      className="text-gray-400 hover:text-rose-500 transition-colors p-2 rounded-full hover:bg-rose-50"
                       title="Copy invite link"
                     >
                       📋
                     </button>
                   </div>
 
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-sm text-gray-600">With</p>
-                      <p className="font-semibold text-gray-800">{date.partnerName}</p>
+                  <div className="space-y-4">
+                    <div className="text-center">
+                      <p className="text-sm text-gray-500 mb-1">With</p>
+                      <p className="text-xl font-bold text-gray-800 handwriting">{date.partnerName} 💕</p>
                     </div>
 
-                    <div>
-                      <p className="text-sm text-gray-600">When</p>
-                      <p className="font-medium text-gray-800">
+                    <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl">
+                      <p className="text-sm text-gray-500 mb-1">When</p>
+                      <p className="font-semibold text-gray-800">
                         {dateTime.toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
                           year: 'numeric'
-                        })} at {dateTime.toLocaleTimeString('en-US', {
+                        })}
+                      </p>
+                      <p className="text-rose-600 font-medium">
+                        {dateTime.toLocaleTimeString('en-US', {
                           hour: 'numeric',
                           minute: '2-digit',
                           hour12: true
@@ -201,41 +269,47 @@ const MyDates = () => {
                       </p>
                     </div>
 
-                    <div>
-                      <p className="text-sm text-gray-600">Message</p>
-                      <p className="text-gray-800 italic text-sm">"{date.message}"</p>
+                    <div className="message-bubble">
+                      <p className="text-gray-800 text-sm handwriting leading-relaxed">{date.message}</p>
                     </div>
 
                     {date.partnerEmail && (
-                      <div className="bg-green-50 p-2 rounded-lg">
-                        <p className="text-xs text-green-600">
-                          ✉️ Invite sent to {date.partnerEmail}
+                      <div className="bg-green-50 p-3 rounded-xl border border-green-200">
+                        <p className="text-xs text-green-600 flex items-center">
+                          <span className="mr-2">✉️</span>
+                          Invite sent to {date.partnerEmail}
                         </p>
                       </div>
                     )}
 
-                    <div className="pt-3 border-t border-gray-100">
+                    <div className="pt-4 border-t border-gray-100">
                       {countdown.expired ? (
-                        <span className="text-red-500 font-medium">Date has passed</span>
+                        <div className="text-center">
+                          <span className="text-gray-500 font-medium handwriting">A beautiful memory 📸</span>
+                        </div>
                       ) : (
-                        <span className="text-pink-500 font-medium">{countdown.text}</span>
+                        <div className="text-center">
+                          <span className="text-rose-500 font-semibold handwriting">{countdown.text} ✨</span>
+                        </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-4 border-t border-gray-100 flex space-x-2">
+                  <div className="mt-6 pt-4 border-t border-gray-100 flex space-x-3">
                     <Link 
                       to={`/invite/${date.id}`}
-                      className="flex-1 bg-pink-50 hover:bg-pink-100 text-pink-600 font-medium py-2 px-4 rounded-lg text-center transition-colors text-sm"
+                      className="flex-1 bg-gradient-to-r from-rose-50 to-pink-50 hover:from-rose-100 hover:to-pink-100 text-rose-600 font-semibold py-3 px-4 rounded-xl text-center transition-all duration-300 text-sm border border-rose-200"
                     >
+                      <span className="mr-1">👀</span>
                       View Invite
                     </Link>
                     <a 
                       href={date.meetingLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 font-medium py-2 px-4 rounded-lg text-center transition-colors text-sm"
+                      className="flex-1 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 text-blue-600 font-semibold py-3 px-4 rounded-xl text-center transition-all duration-300 text-sm border border-blue-200"
                     >
+                      <span className="mr-1">📹</span>
                       Join Call
                     </a>
                   </div>

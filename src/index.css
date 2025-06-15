@@ -1,52 +1,243 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
-    font-family: 'Nunito', system-ui, sans-serif;
-    background: linear-gradient(135deg, #fdf2f8 0%, #faf5ff 100%);
+    font-family: 'Inter', system-ui, sans-serif;
+    background: linear-gradient(135deg, #fef7f0 0%, #fdf4ff 50%, #f0f9ff 100%);
     min-height: 100vh;
+  }
+  
+  .handwriting {
+    font-family: 'Caveat', cursive;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-gradient-to-r from-pink-400 to-pink-500 hover:from-pink-500 hover:to-pink-600 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl;
+    @apply bg-gradient-to-r from-rose-400 via-pink-400 to-purple-400 hover:from-rose-500 hover:via-pink-500 hover:to-purple-500 text-white font-semibold py-4 px-10 rounded-full transition-all duration-500 transform hover:scale-105 shadow-xl hover:shadow-2xl relative overflow-hidden;
+  }
+  
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-primary:hover::before {
+    left: 100%;
   }
   
   .btn-secondary {
-    @apply bg-white hover:bg-pink-50 text-pink-600 font-semibold py-3 px-8 rounded-full border-2 border-pink-200 hover:border-pink-300 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg;
+    @apply bg-white/80 backdrop-blur-sm hover:bg-white text-rose-600 font-semibold py-3 px-8 rounded-full border-2 border-rose-200 hover:border-rose-300 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl;
   }
   
   .card {
-    @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-pink-100;
+    @apply bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 p-8 border border-white/50 relative overflow-hidden;
+  }
+  
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
   }
   
   .input-field {
-    @apply w-full px-4 py-3 rounded-xl border-2 border-pink-100 focus:border-pink-300 focus:outline-none transition-colors duration-200 bg-white;
+    @apply w-full px-6 py-4 rounded-2xl border-2 border-rose-100 focus:border-rose-300 focus:outline-none transition-all duration-300 bg-white/80 backdrop-blur-sm shadow-inner focus:shadow-lg placeholder-gray-400;
   }
   
-  .floating-hearts {
+  .floating-elements {
     position: absolute;
     width: 100%;
     height: 100%;
     overflow: hidden;
     pointer-events: none;
+    z-index: 1;
   }
   
-  .heart {
+  .floating-element {
     position: absolute;
-    color: #f9a8d4;
-    font-size: 1.5rem;
-    animation: float 6s ease-in-out infinite;
+    animation: float-gentle 8s ease-in-out infinite;
+    opacity: 0.6;
   }
   
-  .heart:nth-child(1) { left: 10%; animation-delay: 0s; }
-  .heart:nth-child(2) { left: 20%; animation-delay: 1s; }
-  .heart:nth-child(3) { left: 35%; animation-delay: 2s; }
-  .heart:nth-child(4) { left: 50%; animation-delay: 3s; }
-  .heart:nth-child(5) { left: 65%; animation-delay: 4s; }
-  .heart:nth-child(6) { left: 80%; animation-delay: 5s; }
-  .heart:nth-child(7) { left: 90%; animation-delay: 6s; }
+  .floating-element:nth-child(1) { left: 5%; top: 10%; animation-delay: 0s; font-size: 2rem; }
+  .floating-element:nth-child(2) { left: 85%; top: 15%; animation-delay: 1s; font-size: 1.5rem; }
+  .floating-element:nth-child(3) { left: 15%; top: 70%; animation-delay: 2s; font-size: 1.8rem; }
+  .floating-element:nth-child(4) { left: 75%; top: 65%; animation-delay: 3s; font-size: 1.3rem; }
+  .floating-element:nth-child(5) { left: 45%; top: 20%; animation-delay: 4s; font-size: 1.6rem; }
+  .floating-element:nth-child(6) { left: 25%; top: 40%; animation-delay: 5s; font-size: 1.4rem; }
+  .floating-element:nth-child(7) { left: 65%; top: 35%; animation-delay: 6s; font-size: 1.7rem; }
+  .floating-element:nth-child(8) { left: 10%; top: 85%; animation-delay: 7s; font-size: 1.2rem; }
+  
+  .illustration-container {
+    @apply relative p-12 rounded-3xl overflow-hidden;
+    background: linear-gradient(135deg, #fef7f0 0%, #fdf4ff 50%, #f0f9ff 100%);
+  }
+  
+  .couple-illustration {
+    @apply flex items-center justify-center space-x-8 relative;
+  }
+  
+  .person {
+    @apply relative flex flex-col items-center;
+  }
+  
+  .person-avatar {
+    @apply w-32 h-32 rounded-full flex items-center justify-center mb-4 relative overflow-hidden shadow-2xl;
+    background: linear-gradient(135deg, #fce7f3 0%, #e0e7ff 100%);
+  }
+  
+  .person-device {
+    @apply w-40 h-28 rounded-2xl flex items-center justify-center shadow-xl relative overflow-hidden;
+    background: linear-gradient(135deg, #f3e8ff 0%, #fce7f3 100%);
+  }
+  
+  .connection-line {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(90deg, #f472b6, #a855f7, #f472b6);
+    border-radius: 2px;
+    animation: pulse-connection 2s ease-in-out infinite;
+  }
+  
+  .love-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  
+  .love-particle {
+    position: absolute;
+    animation: love-float 4s ease-in-out infinite;
+    font-size: 1.2rem;
+  }
+  
+  .love-particle:nth-child(1) { left: 20%; top: 30%; animation-delay: 0s; }
+  .love-particle:nth-child(2) { left: 80%; top: 25%; animation-delay: 0.5s; }
+  .love-particle:nth-child(3) { left: 60%; top: 60%; animation-delay: 1s; }
+  .love-particle:nth-child(4) { left: 30%; top: 70%; animation-delay: 1.5s; }
+  .love-particle:nth-child(5) { left: 70%; top: 40%; animation-delay: 2s; }
+  
+  .feature-card {
+    @apply card text-center group cursor-pointer transform transition-all duration-500 hover:scale-105;
+  }
+  
+  .feature-card:hover {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(254,247,240,0.9) 100%);
+  }
+  
+  .feature-icon {
+    @apply text-6xl mb-6 transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-12;
+  }
+  
+  .date-type-card {
+    @apply p-6 rounded-2xl border-3 cursor-pointer transition-all duration-300 transform hover:scale-105 relative overflow-hidden;
+  }
+  
+  .date-type-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.5s;
+  }
+  
+  .date-type-card:hover::before {
+    left: 100%;
+  }
+  
+  .countdown-card {
+    @apply bg-gradient-to-br from-rose-50 to-purple-50 rounded-2xl p-4 shadow-inner;
+  }
+  
+  .countdown-number {
+    @apply text-3xl font-bold bg-gradient-to-r from-rose-500 to-purple-500 bg-clip-text text-transparent;
+  }
+  
+  .invite-card {
+    @apply bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl relative overflow-hidden;
+  }
+  
+  .invite-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    pointer-events: none;
+  }
+  
+  .message-bubble {
+    @apply bg-gradient-to-r from-rose-50 to-purple-50 rounded-2xl p-6 relative;
+  }
+  
+  .message-bubble::before {
+    content: '"';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    font-size: 3rem;
+    color: #f472b6;
+    font-family: 'Caveat', cursive;
+  }
+  
+  .message-bubble::after {
+    content: '"';
+    position: absolute;
+    bottom: -20px;
+    right: 20px;
+    font-size: 3rem;
+    color: #f472b6;
+    font-family: 'Caveat', cursive;
+  }
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(5deg); }
+  50% { transform: translateY(-5px) rotate(-3deg); }
+  75% { transform: translateY(-15px) rotate(3deg); }
+}
+
+@keyframes pulse-connection {
+  0%, 100% { opacity: 0.6; transform: translateX(-50%) scaleX(1); }
+  50% { opacity: 1; transform: translateX(-50%) scaleX(1.1); }
+}
+
+@keyframes love-float {
+  0%, 100% { transform: translateY(0px) scale(1); opacity: 0.7; }
+  50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
 }

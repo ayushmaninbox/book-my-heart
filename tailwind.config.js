@@ -7,6 +7,18 @@ export default {
   theme: {
     extend: {
       colors: {
+        rose: {
+          50: '#fff1f2',
+          100: '#ffe4e6',
+          200: '#fecdd3',
+          300: '#fda4af',
+          400: '#fb7185',
+          500: '#f43f5e',
+          600: '#e11d48',
+          700: '#be123c',
+          800: '#9f1239',
+          900: '#881337',
+        },
         pink: {
           50: '#fdf2f8',
           100: '#fce7f3',
@@ -33,21 +45,37 @@ export default {
         }
       },
       fontFamily: {
-        'sans': ['Nunito', 'system-ui', 'sans-serif'],
+        'sans': ['Inter', 'system-ui', 'sans-serif'],
+        'handwriting': ['Caveat', 'cursive'],
       },
       animation: {
-        'float': 'float 6s ease-in-out infinite',
-        'pulse-soft': 'pulse-soft 2s ease-in-out infinite',
+        'float-gentle': 'float-gentle 8s ease-in-out infinite',
+        'pulse-connection': 'pulse-connection 2s ease-in-out infinite',
+        'love-float': 'love-float 4s ease-in-out infinite',
+        'shimmer': 'shimmer 2s infinite',
       },
       keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
+        'float-gentle': {
+          '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+          '25%': { transform: 'translateY(-10px) rotate(5deg)' },
+          '50%': { transform: 'translateY(-5px) rotate(-3deg)' },
+          '75%': { transform: 'translateY(-15px) rotate(3deg)' },
         },
-        'pulse-soft': {
-          '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.7' },
+        'pulse-connection': {
+          '0%, 100%': { opacity: '0.6', transform: 'translateX(-50%) scaleX(1)' },
+          '50%': { opacity: '1', transform: 'translateX(-50%) scaleX(1.1)' },
+        },
+        'love-float': {
+          '0%, 100%': { transform: 'translateY(0px) scale(1)', opacity: '0.7' },
+          '50%': { transform: 'translateY(-20px) scale(1.2)', opacity: '1' },
+        },
+        'shimmer': {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
         }
+      },
+      backdropBlur: {
+        xs: '2px',
       }
     },
   },

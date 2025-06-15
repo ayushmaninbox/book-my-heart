@@ -12,20 +12,17 @@ const Invite = () => {
   useEffect(() => {
     const loadDateData = async () => {
       try {
-        // Try to load from PocketBase first
         const pocketBaseDate = await getDateById(id);
         
         if (pocketBaseDate) {
           setDateData(pocketBaseDate);
         } else {
-          // Fallback to localStorage
           const dates = JSON.parse(localStorage.getItem('bookmyheart_dates') || '[]');
           const foundDate = dates.find(date => date.id === id);
           setDateData(foundDate);
         }
       } catch (error) {
         console.error('Error loading date:', error);
-        // Fallback to localStorage
         const dates = JSON.parse(localStorage.getItem('bookmyheart_dates') || '[]');
         const foundDate = dates.find(date => date.id === id);
         setDateData(foundDate);
@@ -53,10 +50,21 @@ const Invite = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 to-purple-100">
-        <div className="text-center">
-          <div className="text-6xl mb-4">💖</div>
-          <p className="text-gray-600">Loading your special invite...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 relative overflow-hidden">
+        <div className="floating-elements">
+          <div className="floating-element">💕</div>
+          <div className="floating-element">✨</div>
+          <div className="floating-element">💖</div>
+          <div className="floating-element">🌙</div>
+        </div>
+        <div className="text-center relative z-10">
+          <div className="text-8xl mb-6 animate-pulse">💖</div>
+          <p className="text-xl text-gray-600 handwriting">Loading your special invitation...</p>
+          <div className="mt-4 flex justify-center space-x-1">
+            <div className="w-2 h-2 bg-rose-400 rounded-full animate-bounce"></div>
+            <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+            <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+          </div>
         </div>
       </div>
     );
@@ -64,11 +72,17 @@ const Invite = () => {
 
   if (!dateData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 to-purple-100">
-        <div className="text-center">
-          <div className="text-6xl mb-4">💔</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Invite not found</h2>
-          <p className="text-gray-600">This date invitation doesn't exist or has been removed.</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 relative overflow-hidden">
+        <div className="floating-elements">
+          <div className="floating-element">💔</div>
+          <div className="floating-element">😢</div>
+          <div className="floating-element">🥺</div>
+        </div>
+        <div className="text-center relative z-10">
+          <div className="text-8xl mb-6">💔</div>
+          <h2 className="text-3xl font-bold text-gray-800 mb-4 handwriting">Oops! Invitation Not Found</h2>
+          <p className="text-gray-600 text-lg">This date invitation seems to have wandered off into the digital sunset.</p>
+          <p className="text-gray-500 mt-2">Maybe it's hiding behind a cloud of love? ☁️💕</p>
         </div>
       </div>
     );
@@ -88,42 +102,53 @@ const Invite = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 to-purple-100 relative overflow-hidden">
-      {/* Floating Hearts Background */}
-      <div className="floating-hearts">
-        <div className="heart">💖</div>
-        <div className="heart">💕</div>
-        <div className="heart">💗</div>
-        <div className="heart">💖</div>
-        <div className="heart">💕</div>
-        <div className="heart">💗</div>
-        <div className="heart">💖</div>
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 relative overflow-hidden">
+      {/* Floating Elements Background */}
+      <div className="floating-elements">
+        <div className="floating-element">💕</div>
+        <div className="floating-element">✨</div>
+        <div className="floating-element">💖</div>
+        <div className="floating-element">🌙</div>
+        <div className="floating-element">⭐</div>
+        <div className="floating-element">💫</div>
+        <div className="floating-element">🦋</div>
+        <div className="floating-element">🌸</div>
       </div>
 
       <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
-        <div className="max-w-md w-full">
+        <div className="max-w-lg w-full">
           {/* Main Invite Card */}
-          <div className="bg-white rounded-3xl shadow-2xl p-8 text-center">
-            <div className="text-6xl mb-4">{getDateTypeIcon(dateData.dateType)}</div>
-            
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              You're Invited!
-            </h1>
-            
-            <p className="text-gray-600 mb-6">
-              {dateData.senderName || 'Someone special'} has planned a surprise for you
-            </p>
+          <div className="invite-card p-10 text-center">
+            {/* Header */}
+            <div className="mb-8">
+              <div className="text-8xl mb-4 animate-bounce">{getDateTypeIcon(dateData.dateType)}</div>
+              <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-rose-100 to-purple-100 px-4 py-2 rounded-full mb-4">
+                <span className="w-2 h-2 bg-rose-400 rounded-full animate-pulse"></span>
+                <span className="text-sm text-gray-600">Special Invitation</span>
+              </div>
+              
+              <h1 className="text-4xl font-bold text-gray-800 mb-3 handwriting">
+                You're Invited! 💕
+              </h1>
+              
+              <p className="text-xl text-gray-600 leading-relaxed">
+                <span className="font-semibold text-rose-600">{dateData.senderName || 'Someone special'}</span> has planned something magical just for you
+              </p>
+            </div>
 
             {/* Date Type Badge */}
-            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-pink-100 text-pink-600 rounded-full font-medium mb-6">
-              <span>{getDateTypeIcon(dateData.dateType)}</span>
-              <span>{dateData.dateType}</span>
+            <div className="inline-flex items-center space-x-3 px-6 py-3 bg-gradient-to-r from-rose-100 to-purple-100 rounded-full font-semibold text-gray-700 mb-8 shadow-lg">
+              <span className="text-2xl">{getDateTypeIcon(dateData.dateType)}</span>
+              <span className="text-lg">{dateData.dateType}</span>
             </div>
 
             {/* Date & Time */}
-            <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl p-6 mb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">When</h3>
-              <p className="text-2xl font-bold text-gray-800 mb-1">
+            <div className="bg-gradient-to-r from-white/80 to-rose-50/80 backdrop-blur-sm rounded-3xl p-8 mb-8 shadow-inner">
+              <div className="flex items-center justify-center space-x-2 mb-4">
+                <span className="text-2xl">📅</span>
+                <h3 className="text-xl font-semibold text-gray-800">When the Magic Happens</h3>
+              </div>
+              <p className="text-3xl font-bold text-gray-800 mb-2 handwriting">
                 {dateTime.toLocaleDateString('en-US', {
                   weekday: 'long',
                   month: 'long',
@@ -131,7 +156,7 @@ const Invite = () => {
                   year: 'numeric'
                 })}
               </p>
-              <p className="text-xl text-gray-600">
+              <p className="text-2xl text-rose-600 font-semibold">
                 {dateTime.toLocaleTimeString('en-US', {
                   hour: 'numeric',
                   minute: '2-digit',
@@ -141,50 +166,60 @@ const Invite = () => {
             </div>
 
             {/* Special Message */}
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 mb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Special Message</h3>
-              <p className="text-gray-800 italic text-lg">"{dateData.message}"</p>
+            <div className="message-bubble mb-8">
+              <div className="flex items-center justify-center space-x-2 mb-4">
+                <span className="text-2xl">💌</span>
+                <h3 className="text-lg font-semibold text-gray-800">A Message From the Heart</h3>
+              </div>
+              <p className="text-gray-800 text-xl leading-relaxed handwriting">{dateData.message}</p>
             </div>
 
             {/* Countdown */}
             {countdown && (
-              <div className="mb-6">
+              <div className="mb-8">
                 {countdown.expired ? (
                   <div className="text-center">
-                    <p className="text-red-500 font-semibold text-lg mb-4">The date has started!</p>
+                    <div className="bg-gradient-to-r from-green-100 to-teal-100 p-6 rounded-3xl mb-6">
+                      <p className="text-2xl font-bold text-green-600 mb-2 handwriting">The moment is here! 🎉</p>
+                      <p className="text-green-700">Your special date has begun!</p>
+                    </div>
                     <a 
                       href={dateData.meetingLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-primary"
+                      className="btn-primary text-xl px-12 py-4"
                     >
-                      Join Now! 💖
+                      <span className="mr-3">💖</span>
+                      Join Your Date Now!
+                      <span className="ml-3">✨</span>
                     </a>
                   </div>
                 ) : (
                   <div className="text-center">
-                    <p className="text-gray-600 mb-2">Your special time starts in...</p>
-                    <div className="grid grid-cols-3 gap-4 mb-4">
-                      <div className="bg-pink-100 rounded-xl p-3">
-                        <div className="text-2xl font-bold text-pink-600">{countdown.days}</div>
-                        <div className="text-sm text-pink-600">Days</div>
+                    <p className="text-gray-600 mb-4 text-lg handwriting">Your magical moment begins in...</p>
+                    <div className="grid grid-cols-3 gap-4 mb-8">
+                      <div className="countdown-card">
+                        <div className="countdown-number">{countdown.days}</div>
+                        <div className="text-sm text-gray-600 font-medium">Days</div>
                       </div>
-                      <div className="bg-purple-100 rounded-xl p-3">
-                        <div className="text-2xl font-bold text-purple-600">{countdown.hours}</div>
-                        <div className="text-sm text-purple-600">Hours</div>
+                      <div className="countdown-card">
+                        <div className="countdown-number">{countdown.hours}</div>
+                        <div className="text-sm text-gray-600 font-medium">Hours</div>
                       </div>
-                      <div className="bg-pink-100 rounded-xl p-3">
-                        <div className="text-2xl font-bold text-pink-600">{countdown.minutes}</div>
-                        <div className="text-sm text-pink-600">Minutes</div>
+                      <div className="countdown-card">
+                        <div className="countdown-number">{countdown.minutes}</div>
+                        <div className="text-sm text-gray-600 font-medium">Minutes</div>
                       </div>
                     </div>
                     <a 
                       href={dateData.meetingLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-primary"
+                      className="btn-primary text-xl px-12 py-4"
                     >
-                      Get Ready to Join! 💖
+                      <span className="mr-3">💖</span>
+                      Get Ready to Join!
+                      <span className="ml-3">✨</span>
                     </a>
                   </div>
                 )}
@@ -192,33 +227,43 @@ const Invite = () => {
             )}
 
             {/* Meeting Link Info */}
-            <div className="bg-blue-50 p-4 rounded-xl mb-6">
-              <p className="text-sm text-blue-600 mb-2">📱 No login required!</p>
-              <p className="text-xs text-blue-500">
-                Click the button above to join directly via Google Meet
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl mb-6">
+              <div className="flex items-center justify-center space-x-2 mb-2">
+                <span className="text-xl">📱</span>
+                <p className="font-semibold text-blue-700">No Login Required!</p>
+              </div>
+              <p className="text-sm text-blue-600">
+                Just click the button above to join directly via Google Meet. It's that simple! 
               </p>
             </div>
 
             {/* Additional Info */}
             {dateData.spotifyPlaylist && (
-              <div className="mt-6 p-4 bg-green-50 rounded-xl">
-                <p className="text-sm text-gray-600 mb-2">🎵 Playlist for the date:</p>
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-2xl">
+                <div className="flex items-center justify-center space-x-2 mb-3">
+                  <span className="text-xl">🎵</span>
+                  <p className="font-semibold text-green-700">Perfect Playlist Included</p>
+                </div>
                 <a 
                   href={dateData.spotifyPlaylist}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-green-600 hover:text-green-700 font-medium"
+                  className="inline-flex items-center space-x-2 text-green-600 hover:text-green-700 font-medium transition-colors"
                 >
-                  Listen on Spotify
+                  <span>Listen on Spotify</span>
+                  <span>🎧</span>
                 </a>
               </div>
             )}
           </div>
 
           {/* Footer */}
-          <div className="text-center mt-6">
-            <p className="text-gray-600 text-sm">
+          <div className="text-center mt-8">
+            <p className="text-gray-500 handwriting text-lg">
               Made with 💖 by BookMyHeart
+            </p>
+            <p className="text-gray-400 text-sm mt-2">
+              Connecting hearts, one date at a time ✨
             </p>
           </div>
         </div>
