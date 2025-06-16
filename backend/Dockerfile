@@ -11,9 +11,12 @@ ADD https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/po
 RUN unzip /tmp/pb.zip -d /pb/
 RUN chmod +x /pb/pocketbase
 
-# Copy hooks and migrations
+# Copy hooks (always exists)
 COPY pb_hooks /pb/pb_hooks
-COPY pb_migrations /pb/pb_migrations
+
+# Copy migrations if they exist, create empty directory if not
+COPY pb_migrations* /pb/pb_migrations/
+RUN mkdir -p /pb/pb_migrations
 
 # Create pb_data directory
 RUN mkdir -p /pb_data
