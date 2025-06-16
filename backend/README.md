@@ -1,87 +1,82 @@
-# BookMyHeart Backend Setup
+# BookMyHeart Backend - Render Deployment
 
-## Overview
-This backend uses PocketBase as the database and API server, with custom hooks for email functionality.
+## Render Deployment Steps
 
-## Local Development Setup
+### 1. Create Render Account
+1. Go to https://render.com
+2. Sign up with your GitHub account
+3. Connect your repository
 
-### 1. Install PocketBase
+### 2. Deploy to Render
+1. Click "New +" → "Web Service"
+2. Connect your GitHub repository
+3. Select the repository containing your backend
+4. Configure the service:
+   - **Name**: `bookmyheart-backend`
+   - **Region**: Choose closest to your users
+   - **Branch**: `main` (or your default branch)
+   - **Root Directory**: `backend`
+   - **Runtime**: `Docker`
+   - **Build Command**: (leave empty - Docker handles this)
+   - **Start Command**: (leave empty - Docker handles this)
 
-#### Option A: Download Binary
-1. Go to https://pocketbase.io/docs/
-2. Download PocketBase for your OS
-3. Extract the executable to the `backend` folder
-4. The executable should be named `pocketbase` (or `pocketbase.exe` on Windows)
+### 3. Environment Variables
+Add these environment variables in Render dashboard:
+- `PORT`: `8080`
+- `PB_ENCRYPTION_KEY`: (Render will auto-generate this)
 
-#### Option B: Using Go (if you have Go installed)
-```bash
-cd backend
-go install github.com/pocketbase/pocketbase@latest
-```
+### 4. Add Persistent Disk
+1. In your service settings, go to "Disks"
+2. Add a new disk:
+   - **Name**: `pb-data`
+   - **Mount Path**: `/pb_data`
+   - **Size**: `1 GB` (free tier)
 
-### 2. Start PocketBase
+### 5. Deploy
+1. Click "Create Web Service"
+2. Wait for deployment to complete
+3. Your backend will be available at: `https://your-service-name.onrender.com`
+
+## After Deployment
+
+### Update Frontend Configuration
+Update your Netlify environment variables:
+1. Go to Netlify dashboard → Site settings → Environment variables
+2. Update `VITE_POCKETBASE_URL` to your Render URL
+3. Redeploy your frontend
+
+### Test the API
+Your PocketBase admin panel will be available at:
+`https://your-service-name.onrender.com/_/`
+
+## Important Notes
+
+- **Free Tier Limitations**: Render free tier spins down after 15 minutes of inactivity
+- **Database Persistence**: The persistent disk ensures your data survives deployments
+- **CORS**: Already configured to allow requests from any origin
+- **Email**: Configure email settings in PocketBase admin panel after deployment
+
+## Troubleshooting
+
+### If deployment fails:
+1. Check the build logs in Render dashboard
+2. Ensure all files are in the `backend` directory
+3. Verify Dockerfile syntax
+
+### If CORS errors occur:
+1. Check that CORS hook is properly deployed
+2. Verify the frontend is using the correct backend URL
+
+### If database issues occur:
+1. Check that the persistent disk is properly mounted
+2. Verify migration files are in the correct location
+3. Check PocketBase logs in Render dashboard
+
+## Local Development
+To run locally:
 ```bash
 cd backend
 ./pocketbase serve
 ```
 
-The admin UI will be available at: http://127.0.0.1:8090/_/
-
-### 3. Initial Setup
-1. Open http://127.0.0.1:8090/_/ in your browser
-2. Create an admin account
-3. The database schema will be automatically created from the migration files
-
-### 4. Environment Variables
-Create a `.env` file in the root directory with:
-```
-VITE_POCKETBASE_URL=http://127.0.0.1:8090
-VITE_RESEND_API_KEY=your_resend_api_key_here
-VITE_APP_URL=http://localhost:5173
-```
-
-## Email Setup (Resend)
-
-### 1. Get Resend API Key
-1. Go to https://resend.com
-2. Sign up for a free account
-3. Verify your email domain (or use the test domain for development)
-4. Go to API Keys section
-5. Create a new API key
-6. Copy the key and add it to your `.env` file
-
-### 2. Configure Email Hook
-The email hook is already configured in `pb_hooks/send_invite_email.pb.js`
-
-## Database Schema
-The database schema is defined in the migration files:
-- `pb_migrations/001_initial_schema.sql` - Creates the main tables
-- Collections: `dates`, `invites`
-
-## API Endpoints
-- `POST /api/collections/dates/records` - Create a new date
-- `GET /api/collections/dates/records` - Get dates
-- `POST /api/collections/invites/records` - Create invite
-- `POST /api/send-invite-email` - Send email invite
-
-## Deployment to Fly.io (Future)
-
-### 1. Install Fly CLI
-```bash
-curl -L https://fly.io/install.sh | sh
-```
-
-### 2. Login and Deploy
-```bash
-fly auth login
-fly launch
-fly deploy
-```
-
-### 3. Set Environment Variables
-```bash
-fly secrets set RESEND_API_KEY=your_key_here
-```
-
-## Frontend Integration
-The frontend automatically falls back to localStorage if PocketBase is unavailable, ensuring offline functionality.
+Admin panel: http://127.0.0.1:8090/_/

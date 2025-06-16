@@ -15,7 +15,10 @@ RUN chmod +x /pb/pocketbase
 COPY pb_hooks /pb/pb_hooks
 COPY pb_migrations /pb/pb_migrations
 
+# Create pb_data directory
+RUN mkdir -p /pb_data
+
 EXPOSE 8080
 
-# Start PocketBase
-CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8080"]
+# Start PocketBase with proper data directory
+CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8080", "--dir=/pb_data"]
