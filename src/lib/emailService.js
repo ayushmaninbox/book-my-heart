@@ -1,4 +1,5 @@
 import emailjs from 'emailjs-com';
+import { createInvite, updateInviteStatus } from './supabase';
 
 // Initialize EmailJS
 const initEmailJS = () => {
@@ -56,7 +57,7 @@ export const sendDateInviteEmail = async (inviteData) => {
   }
 };
 
-// Send date invitation with Firestore integration
+// Send date invitation with Supabase integration
 export const sendDateInvite = async (dateId, partnerEmail, partnerName, dateData) => {
   try {
     const inviteData = {
@@ -73,8 +74,7 @@ export const sendDateInvite = async (dateId, partnerEmail, partnerName, dateData
       emailSent: false
     };
 
-    // Create invite record in Firestore
-    const { createInvite, updateInviteStatus } = await import('./firestore');
+    // Create invite record in Supabase
     const invite = await createInvite(inviteData);
     
     // Send email

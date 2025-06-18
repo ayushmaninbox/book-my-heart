@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getDateById } from '../../lib/firestore';
+import { getDateById } from '../../lib/supabase';
 
 const Confirmation = () => {
   const { id } = useParams();
@@ -10,10 +10,10 @@ const Confirmation = () => {
   useEffect(() => {
     const loadDateData = async () => {
       try {
-        const firebaseDate = await getDateById(id);
+        const supabaseDate = await getDateById(id);
         
-        if (firebaseDate) {
-          setDateData(firebaseDate);
+        if (supabaseDate) {
+          setDateData(supabaseDate);
         } else {
           // Fallback to localStorage for backward compatibility
           const dates = JSON.parse(localStorage.getItem('bookmyheart_dates') || '[]');

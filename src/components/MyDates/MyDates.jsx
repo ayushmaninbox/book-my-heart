@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getUserId } from '../../utils/generateUserId';
 import { formatCountdown } from '../../utils/formatCountdown';
-import { getUserDates } from '../../lib/firestore';
+import { getUserDates } from '../../lib/supabase';
 
 const MyDates = () => {
   const [dates, setDates] = useState([]);
@@ -14,18 +14,18 @@ const MyDates = () => {
       try {
         const userId = getUserId();
         
-        // Clear localStorage data (migrating to Firebase)
+        // Clear localStorage data (migrating to Supabase)
         localStorage.removeItem('bookmyheart_dates');
         localStorage.removeItem('bookmyheart_localStorage_cleared');
-        console.log('Cleared localStorage data - now using Firebase');
+        console.log('Cleared localStorage data - now using Supabase');
         
         let finalDates = [];
         
         try {
           finalDates = await getUserDates(userId);
-          console.log('Loaded from Firebase Firestore:', finalDates.length, 'dates');
+          console.log('Loaded from Supabase:', finalDates.length, 'dates');
         } catch (error) {
-          console.warn('Firebase unavailable:', error);
+          console.warn('Supabase unavailable:', error);
           finalDates = [];
         }
         

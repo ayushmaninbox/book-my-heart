@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { getUserId, generateShortId } from '../../utils/generateUserId';
 import { generateMeetingLink } from '../../utils/formatCountdown';
-import { createDate } from '../../lib/firestore';
+import { createDate } from '../../lib/supabase';
 import { sendDateInvite } from '../../lib/emailService';
 
 const PlanDate = () => {
@@ -85,12 +85,12 @@ const PlanDate = () => {
         ...data,
         meetingLink,
         dateTime: dateTime.toISOString(),
-        createdAt: new Date().toISOString()
+        created_at: new Date().toISOString()
       };
 
-      // Create date in Firestore
+      // Create date in Supabase
       await createDate(dateData);
-      console.log('Date created in Firebase Firestore');
+      console.log('Date created in Supabase');
 
       // Send email invitation if email provided
       if (data.partnerEmail) {
