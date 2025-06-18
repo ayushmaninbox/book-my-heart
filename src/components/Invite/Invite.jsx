@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { formatCountdown } from '../../utils/formatCountdown';
-import { getDateById } from '../../lib/pocketbase';
+import { getDateById } from '../../lib/firestore';
 
 const Invite = () => {
   const { id } = useParams();
@@ -12,17 +12,19 @@ const Invite = () => {
   useEffect(() => {
     const loadDateData = async () => {
       try {
-        const pocketBaseDate = await getDateById(id);
+        const firebaseDate = await getDateById(id);
         
-        if (pocketBaseDate) {
-          setDateData(pocketBaseDate);
+        if (firebaseDate) {
+          setDateData(firebaseDate);
         } else {
+          // Fallback to localStorage for backward compatibility
           const dates = JSON.parse(localStorage.getItem('bookmyheart_dates') || '[]');
           const foundDate = dates.find(date => date.id === id);
           setDateData(foundDate);
         }
       } catch (error) {
         console.error('Error loading date:', error);
+        // Fallback to localStorage
         const dates = JSON.parse(localStorage.getItem('bookmyheart_dates') || '[]');
         const foundDate = dates.find(date => date.id === id);
         setDateData(foundDate);

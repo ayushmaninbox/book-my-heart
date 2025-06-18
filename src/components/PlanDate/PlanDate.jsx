@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { getUserId, generateShortId } from '../../utils/generateUserId';
 import { generateMeetingLink } from '../../utils/formatCountdown';
-import { createDate, sendDateInvite } from '../../lib/pocketbase';
+import { createDate } from '../../lib/firestore';
+import { sendDateInvite } from '../../lib/emailService';
 
 const PlanDate = () => {
   const navigate = useNavigate();
@@ -87,15 +88,18 @@ const PlanDate = () => {
         createdAt: new Date().toISOString()
       };
 
+      // Create date in Firestore
       await createDate(dateData);
-      console.log('Date created in PocketBase only');
+      console.log('Date created in Firebase Firestore');
 
+      // Send email invitation if email provided
       if (data.partnerEmail) {
         try {
           await sendDateInvite(dateId, data.partnerEmail, data.partnerName, {
             ...dateData,
             senderName: data.senderName || 'Someone special'
           });
+          console.log('Email invitation sent');
         } catch (emailError) {
           console.warn('Email sending failed, but date was created:', emailError);
         }

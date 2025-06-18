@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { getDateById } from '../../lib/firestore';
 
 const Confirmation = () => {
   const { id } = useParams();
@@ -7,9 +8,28 @@ const Confirmation = () => {
   const [linkCopied, setLinkCopied] = useState(false);
 
   useEffect(() => {
-    const dates = JSON.parse(localStorage.getItem('bookmyheart_dates') || '[]');
-    const foundDate = dates.find(date => date.id === id);
-    setDateData(foundDate);
+    const loadDateData = async () => {
+      try {
+        const firebaseDate = await getDateById(id);
+        
+        if (firebaseDate) {
+          setDateData(firebaseDate);
+        } else {
+          // Fallback to localStorage for backward compatibility
+          const dates = JSON.parse(localStorage.getItem('bookmyheart_dates') || '[]');
+          const foundDate = dates.find(date => date.id === id);
+          setDateData(foundDate);
+        }
+      } catch (error) {
+        console.error('Error loading date:', error);
+        // Fallback to localStorage
+        const dates = JSON.parse(localStorage.getItem('bookmyheart_dates') || '[]');
+        const foundDate = dates.find(date => date.id === id);
+        setDateData(foundDate);
+      }
+    };
+
+    loadDateData();
   }, [id]);
 
   const copyInviteLink = () => {

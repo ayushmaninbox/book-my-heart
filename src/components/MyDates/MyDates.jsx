@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getUserId } from '../../utils/generateUserId';
 import { formatCountdown } from '../../utils/formatCountdown';
-import { getUserDates } from '../../lib/pocketbase';
+import { getUserDates } from '../../lib/firestore';
 
 const MyDates = () => {
   const [dates, setDates] = useState([]);
@@ -14,17 +14,18 @@ const MyDates = () => {
       try {
         const userId = getUserId();
         
+        // Clear localStorage data (migrating to Firebase)
         localStorage.removeItem('bookmyheart_dates');
         localStorage.removeItem('bookmyheart_localStorage_cleared');
-        console.log('Force cleared all localStorage data');
+        console.log('Cleared localStorage data - now using Firebase');
         
         let finalDates = [];
         
         try {
           finalDates = await getUserDates(userId);
-          console.log('Loaded from PocketBase only:', finalDates.length, 'dates');
+          console.log('Loaded from Firebase Firestore:', finalDates.length, 'dates');
         } catch (error) {
-          console.warn('PocketBase unavailable:', error);
+          console.warn('Firebase unavailable:', error);
           finalDates = [];
         }
         
